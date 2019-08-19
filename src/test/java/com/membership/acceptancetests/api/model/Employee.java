@@ -7,6 +7,7 @@ import java.util.Objects;
 
 
 public class Employee {
+    private String cardNumber;
     private int employeeId;
     private String firstName;
     private String lastName;
@@ -16,13 +17,15 @@ public class Employee {
     private double balance;
 
     @JsonCreator
-    public Employee(@JsonProperty("employeeId") int employeeId,
+    public Employee(@JsonProperty("cardNumber") String cardNumber,
+                    @JsonProperty("employeeId") int employeeId,
                     @JsonProperty("firstName") String firstName,
                     @JsonProperty("lastName") String lastName,
                     @JsonProperty("email") String email,
                     @JsonProperty("mobileNo") String mobileNo,
                     @JsonProperty("pin") String pin,
                     @JsonProperty("balance") double balance) {
+        this.cardNumber = cardNumber;
         this.employeeId = employeeId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -79,7 +82,8 @@ public class Employee {
     @Override
     public String toString() {
         return "Employee{" +
-                "employeeId=" + employeeId +
+                "cardNumber='" + cardNumber + '\'' +
+                ", employeeId=" + employeeId +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
@@ -96,6 +100,7 @@ public class Employee {
         Employee employee = (Employee) o;
         return employeeId == employee.employeeId &&
                 Double.compare(employee.balance, balance) == 0 &&
+                Objects.equals(cardNumber, employee.cardNumber) &&
                 Objects.equals(firstName, employee.firstName) &&
                 Objects.equals(lastName, employee.lastName) &&
                 Objects.equals(email, employee.email) &&
@@ -106,6 +111,14 @@ public class Employee {
     @Override
     public int hashCode() {
 
-        return Objects.hash(employeeId, firstName, lastName, email, mobileNo, pin, balance);
+        return Objects.hash(cardNumber, employeeId, firstName, lastName, email, mobileNo, pin, balance);
+    }
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
     }
 }

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 
 public class RegisterNewEmployeeRequest {
+    private String cardNumber;
     private final int employeeId;
     private String firstName;
     private String lastName;
@@ -14,13 +15,14 @@ public class RegisterNewEmployeeRequest {
     private final String pin;
 
     @JsonCreator
-    public RegisterNewEmployeeRequest(@JsonProperty("firstName") int employeeId,
+    public RegisterNewEmployeeRequest(@JsonProperty("cardNumber") String cardNumber,
+                                      @JsonProperty("employeeId") int employeeId,
                                       @JsonProperty("firstName") String firstName,
-                                      @JsonProperty("firstName") String lastName,
-                                      @JsonProperty("firstName") String email,
-                                      @JsonProperty("firstName") String mobileNo,
-                                      @JsonProperty("firstName") String pin) {
-
+                                      @JsonProperty("lastName") String lastName,
+                                      @JsonProperty("email") String email,
+                                      @JsonProperty("mobileNo") String mobileNo,
+                                      @JsonProperty("pin") String pin) {
+        this.cardNumber = cardNumber;
         this.employeeId = employeeId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -67,6 +69,7 @@ public class RegisterNewEmployeeRequest {
         if (o == null || getClass() != o.getClass()) return false;
         RegisterNewEmployeeRequest that = (RegisterNewEmployeeRequest) o;
         return employeeId == that.employeeId &&
+                Objects.equals(cardNumber, that.cardNumber) &&
                 Objects.equals(firstName, that.firstName) &&
                 Objects.equals(lastName, that.lastName) &&
                 Objects.equals(email, that.email) &&
@@ -77,6 +80,14 @@ public class RegisterNewEmployeeRequest {
     @Override
     public int hashCode() {
 
-        return Objects.hash(employeeId, firstName, lastName, email, mobileNo, pin);
+        return Objects.hash(cardNumber, employeeId, firstName, lastName, email, mobileNo, pin);
+    }
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
     }
 }
