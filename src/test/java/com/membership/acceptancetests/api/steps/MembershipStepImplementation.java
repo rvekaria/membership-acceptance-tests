@@ -47,8 +47,9 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
 
     }
 
-    @Step("Given a new employee with id <employeeId>, first name <firstName>, last name <lastName>, email <email>, mobile number <mobileNo> and pin <pin>")
-    public void newEmployeeWithDetails(String employeeId, String firstName, String lastName, String email, String mobileNo, String pin) {
+    @Step("Given a new employee with card number <cardNumber>, id <employeeId>, first name <firstName>, last name <lastName>, email <email>, mobile number <mobileNo> and pin <pin>")
+    public void newEmployeeWithDetails(String cardNumber, String employeeId, String firstName, String lastName, String email, String mobileNo, String pin) {
+        scenarioStore.put("cardNumber", cardNumber);
         scenarioStore.put("employeeId", employeeId);
         scenarioStore.put("firstName", firstName);
         scenarioStore.put("lastName", lastName);
@@ -57,15 +58,17 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
         scenarioStore.put("pin", pin);
     }
 
-    @Step("Then the new employee is successfully added to the system")
+    @Step("Then the new employee is successfully added to the system against their unique card number")
     public void addNewMemberToSystem() {
+        String cardNumber = (String) scenarioStore.get("cardNumber");
         int employeeId = Integer.parseInt((String) scenarioStore.get("employeeId"));
         String firstName = (String) scenarioStore.get("firstName");
         String lastName = (String) scenarioStore.get("lastName");
         String email = (String) scenarioStore.get("email");
         String mobileNo = (String) scenarioStore.get("mobileNo");
         String pin = (String) scenarioStore.get("pin");
-        Employee newEmployee = createNewEmployee(employeeId, firstName, lastName, email, mobileNo, pin);
+        Employee newEmployee = createNewEmployee(cardNumber, employeeId, firstName, lastName, email, mobileNo, pin);
+        assertEquals(cardNumber, newEmployee.getCardNumber());
         assertEquals(employeeId, newEmployee.getEmployeeId());
         assertEquals(firstName, newEmployee.getFirstName());
         assertEquals(lastName, newEmployee.getLastName());
