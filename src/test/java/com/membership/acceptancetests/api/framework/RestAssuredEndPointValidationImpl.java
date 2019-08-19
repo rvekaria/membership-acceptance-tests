@@ -54,14 +54,14 @@ public class RestAssuredEndPointValidationImpl implements EndPointValidation {
     }
 
     public Employee getMemberDetails(int employeeId) {
-        String getMemberDetailsUrl = "/employee?employeeId=" + employeeId;
-        return performGetRequest(getMemberDetailsUrl).as(Employee.class);
+        String getEmployeeDetailsUrl = "/employee?employeeId=" + employeeId;
+        return performGetRequest(getEmployeeDetailsUrl).as(Employee.class);
     }
 
-    public Employee createNewMember(String firstName, String lastName) {
-        String addNewMemberUrl = "/newEmployee";
-        RegisterNewEmployeeRequest employeeResource = new RegisterNewEmployeeRequest(firstName, lastName);
-        return performPostRequest(employeeResource, addNewMemberUrl).as(Employee.class);
+    public Employee createNewEmployee(int employeeId, String firstName, String lastName, String email, String mobileNo, String pin) {
+        String addNewEmployeeUrl = "/newEmployee";
+        RegisterNewEmployeeRequest employeeResource = new RegisterNewEmployeeRequest(employeeId, firstName, lastName, email, mobileNo, pin);
+        return performPostRequest(employeeResource, addNewEmployeeUrl).as(Employee.class);
 
     }
 }

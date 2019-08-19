@@ -5,6 +5,7 @@ import com.membership.acceptancetests.api.model.Employee;
 import com.thoughtworks.gauge.Step;
 import com.thoughtworks.gauge.datastore.DataStore;
 import com.thoughtworks.gauge.datastore.DataStoreFactory;
+
 import static org.junit.Assert.*;
 
 public class MembershipStepImplementation extends RestAssuredEndPointValidationImpl {
@@ -46,19 +47,31 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
 
     }
 
-    @Step("Given a new employee with first name <firstName> and last name <lastName>")
-    public void newEmployeeWithFirstAndLastName(String firstName, String lastName) {
+    @Step("Given a new employee with id <employeeId>, first name <firstName>, last name <lastName>, email <email>, mobile number <mobileNo> and pin <pin>")
+    public void newEmployeeWithDetails(String employeeId, String firstName, String lastName, String email, String mobileNo, String pin) {
+        scenarioStore.put("employeeId", employeeId);
         scenarioStore.put("firstName", firstName);
         scenarioStore.put("lastName", lastName);
+        scenarioStore.put("email", email);
+        scenarioStore.put("mobileNo", mobileNo);
+        scenarioStore.put("pin", pin);
     }
 
-    @Step("Then the new employee is added to the system")
+    @Step("Then the new employee is successfully added to the system")
     public void addNewMemberToSystem() {
+        int employeeId = Integer.parseInt((String) scenarioStore.get("employeeId"));
         String firstName = (String) scenarioStore.get("firstName");
         String lastName = (String) scenarioStore.get("lastName");
-        Employee newEmployee = createNewMember(firstName, lastName);
+        String email = (String) scenarioStore.get("email");
+        String mobileNo = (String) scenarioStore.get("mobileNo");
+        String pin = (String) scenarioStore.get("pin");
+        Employee newEmployee = createNewEmployee(employeeId, firstName, lastName, email, mobileNo, pin);
+        assertEquals(employeeId, newEmployee.getEmployeeId());
         assertEquals(firstName, newEmployee.getFirstName());
         assertEquals(lastName, newEmployee.getLastName());
+        assertEquals(email, newEmployee.getEmail());
+        assertEquals(mobileNo, newEmployee.getMobileNo());
+        assertEquals(pin, newEmployee.getPin());
     }
 
 
