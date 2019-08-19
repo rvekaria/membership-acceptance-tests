@@ -6,17 +6,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 
 
-public class Member {
+public class Employee {
     private int employeeId;
     private String firstName;
     private String lastName;
     private double balance;
 
     @JsonCreator
-    public Member(@JsonProperty("employeeId") int employeeId,
-                  @JsonProperty("firstName") String firstName,
-                  @JsonProperty("lastName") String lastName,
-                  @JsonProperty("balance") double balance) {
+    public Employee(@JsonProperty("employeeId") int employeeId,
+                    @JsonProperty("firstName") String firstName,
+                    @JsonProperty("lastName") String lastName,
+                    @JsonProperty("balance") double balance) {
         this.employeeId = employeeId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -55,11 +55,11 @@ public class Member {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Member member = (Member) o;
-        return employeeId == member.employeeId &&
-                Double.compare(member.balance, balance) == 0 &&
-                Objects.equals(firstName, member.firstName) &&
-                Objects.equals(lastName, member.lastName);
+        Employee employee = (Employee) o;
+        return employeeId == employee.employeeId &&
+                Double.compare(employee.balance, balance) == 0 &&
+                Objects.equals(firstName, employee.firstName) &&
+                Objects.equals(lastName, employee.lastName);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class Member {
 
     @Override
     public String toString() {
-        return "Member{" +
+        return "Employee{" +
                 "employeeId=" + employeeId +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +

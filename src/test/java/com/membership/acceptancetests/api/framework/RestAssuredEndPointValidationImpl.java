@@ -1,9 +1,8 @@
 package com.membership.acceptancetests.api.framework;
 
-import com.membership.acceptancetests.api.model.Member;
-import com.membership.acceptancetests.api.model.resource.CreateNewMemberRequest;
+import com.membership.acceptancetests.api.model.Employee;
+import com.membership.acceptancetests.api.model.resource.RegisterNewEmployeeRequest;
 import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
 import io.restassured.response.ResponseBody;
 import org.apache.http.HttpStatus;
 
@@ -54,15 +53,15 @@ public class RestAssuredEndPointValidationImpl implements EndPointValidation {
                 .statusCode(HttpStatus.SC_OK).extract().response().getBody();
     }
 
-    public Member getMemberDetails(int employeeId) {
-        String getMemberDetailsUrl = "/member?employeeId=" + employeeId;
-        return performGetRequest(getMemberDetailsUrl).as(Member.class);
+    public Employee getMemberDetails(int employeeId) {
+        String getMemberDetailsUrl = "/employee?employeeId=" + employeeId;
+        return performGetRequest(getMemberDetailsUrl).as(Employee.class);
     }
 
-    public Member createNewMember(String firstName, String lastName) {
-        String addNewMemberUrl = "/newMember";
-        CreateNewMemberRequest memberResource = new CreateNewMemberRequest(firstName, lastName);
-        return performPostRequest(memberResource, addNewMemberUrl).as(Member.class);
+    public Employee createNewMember(String firstName, String lastName) {
+        String addNewMemberUrl = "/newEmployee";
+        RegisterNewEmployeeRequest employeeResource = new RegisterNewEmployeeRequest(firstName, lastName);
+        return performPostRequest(employeeResource, addNewMemberUrl).as(Employee.class);
 
     }
 }

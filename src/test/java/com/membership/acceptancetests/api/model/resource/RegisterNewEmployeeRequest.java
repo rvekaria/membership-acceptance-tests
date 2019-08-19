@@ -5,12 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
-public class CreateNewMemberRequest {
+public class RegisterNewEmployeeRequest {
     private String firstName;
     private String lastName;
 
     @JsonCreator
-    public CreateNewMemberRequest(@JsonProperty("firstName") String firstName, @JsonProperty("lastName") String lastName) {
+    public RegisterNewEmployeeRequest(@JsonProperty("firstName") String firstName, @JsonProperty("lastName") String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
     }
@@ -35,7 +35,7 @@ public class CreateNewMemberRequest {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CreateNewMemberRequest that = (CreateNewMemberRequest) o;
+        RegisterNewEmployeeRequest that = (RegisterNewEmployeeRequest) o;
         return Objects.equals(firstName, that.firstName) &&
                 Objects.equals(lastName, that.lastName);
     }

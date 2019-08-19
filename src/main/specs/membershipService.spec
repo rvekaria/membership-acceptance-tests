@@ -2,16 +2,16 @@
 
 * Given the membership system is hosted at address "localhost" on port "8080"
 
-## Retrieve member information
+## Retrieve employee information
 * Given an employee id "1"
-* Then the correct member details is retrieved
+* Then the correct employee details is retrieved
 
-## Add new member
+## Add new employee
 * Given a new employee with first name "John" and last name "Nelson"
-* Then the new member is added to the system
+* Then the new employee is added to the system
 
-## Add cash to member's balance
+## Add cash to employee's balance
 * Given an employee id "1"
-* And the member has a balance of "5"
-* When the member tops up by "3"
+* And the employee has a balance of "5"
+* When the employee tops up by "3"
 * Then the balance is "8"

@@ -1,7 +1,7 @@
 package com.membership.acceptancetests.api.steps;
 
 import com.membership.acceptancetests.api.framework.RestAssuredEndPointValidationImpl;
-import com.membership.acceptancetests.api.model.Member;
+import com.membership.acceptancetests.api.model.Employee;
 import com.thoughtworks.gauge.Step;
 import com.thoughtworks.gauge.datastore.DataStore;
 import com.thoughtworks.gauge.datastore.DataStoreFactory;
@@ -22,12 +22,12 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
         scenarioStore.put("employeeId", employeeId);
     }
 
-    @Step("And the member has a balance of <currentBalance>")
+    @Step("And the employee has a balance of <currentBalance>")
     public void andTheMemberHasABalanceOf(double currentBalance) {
 
     }
 
-    @Step("When the member tops up by <topUpAmount>")
+    @Step("When the employee tops up by <topUpAmount>")
     public void whenTheMemberTopsUpBy(double topUpAmount) {
 
     }
@@ -37,12 +37,12 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
 
     }
 
-    @Step("Then the correct member details is retrieved")
-    public void memberDetailsIsRetrieved() {
+    @Step("Then the correct employee details is retrieved")
+    public void employeeDetailsIsRetrieved() {
         int employeeId = Integer.parseInt((String) scenarioStore.get("employeeId"));
-        Member member = getMemberDetails(employeeId);
-        System.out.println("Retrieved Member:");
-        System.out.println(member);
+        Employee employee = getMemberDetails(employeeId);
+        System.out.println("Retrieved Employee:");
+        System.out.println(employee);
 
     }
 
@@ -52,13 +52,13 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
         scenarioStore.put("lastName", lastName);
     }
 
-    @Step("Then the new member is added to the system")
+    @Step("Then the new employee is added to the system")
     public void addNewMemberToSystem() {
         String firstName = (String) scenarioStore.get("firstName");
         String lastName = (String) scenarioStore.get("lastName");
-        Member newMember = createNewMember(firstName, lastName);
-        assertEquals(firstName, newMember.getFirstName());
-        assertEquals(lastName, newMember.getLastName());
+        Employee newEmployee = createNewMember(firstName, lastName);
+        assertEquals(firstName, newEmployee.getFirstName());
+        assertEquals(lastName, newEmployee.getLastName());
     }
 
 
