@@ -7,24 +7,24 @@ import java.util.Objects;
 
 
 public class Member {
-    private int memberId;
+    private int employeeId;
     private String firstName;
     private String lastName;
     private double balance;
 
     @JsonCreator
-    public Member(@JsonProperty("memberId") int memberId,
+    public Member(@JsonProperty("employeeId") int employeeId,
                   @JsonProperty("firstName") String firstName,
                   @JsonProperty("lastName") String lastName,
                   @JsonProperty("balance") double balance) {
-        this.memberId = memberId;
+        this.employeeId = employeeId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.balance = balance;
     }
 
-    public int getMemberId() {
-        return memberId;
+    public int getEmployeeId() {
+        return employeeId;
     }
 
     public String getFirstName() {
@@ -56,7 +56,7 @@ public class Member {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Member member = (Member) o;
-        return memberId == member.memberId &&
+        return employeeId == member.employeeId &&
                 Double.compare(member.balance, balance) == 0 &&
                 Objects.equals(firstName, member.firstName) &&
                 Objects.equals(lastName, member.lastName);
@@ -65,13 +65,13 @@ public class Member {
     @Override
     public int hashCode() {
 
-        return Objects.hash(memberId, firstName, lastName, balance);
+        return Objects.hash(employeeId, firstName, lastName, balance);
     }
 
     @Override
     public String toString() {
         return "Member{" +
-                "memberId=" + memberId +
+                "employeeId=" + employeeId +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", balance=" + balance +

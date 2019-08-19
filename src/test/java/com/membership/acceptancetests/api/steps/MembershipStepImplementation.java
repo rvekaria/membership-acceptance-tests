@@ -17,9 +17,9 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
         scenarioStore = DataStoreFactory.getScenarioDataStore();
     }
 
-    @Step("Given a member id <memberId>")
-    public void givenAMemberId(String memberId) {
-        scenarioStore.put("memberId", memberId);
+    @Step("Given an employee id <employeeId>")
+    public void givenAnEmployeeId(String employeeId) {
+        scenarioStore.put("employeeId", employeeId);
     }
 
     @Step("And the member has a balance of <currentBalance>")
@@ -39,8 +39,8 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
 
     @Step("Then the correct member details is retrieved")
     public void memberDetailsIsRetrieved() {
-        int memberId = Integer.parseInt((String) scenarioStore.get("memberId"));
-        Member member = getMemberDetails(memberId);
+        int employeeId = Integer.parseInt((String) scenarioStore.get("employeeId"));
+        Member member = getMemberDetails(employeeId);
         System.out.println("Retrieved Member:");
         System.out.println(member);
 

@@ -54,8 +54,8 @@ public class RestAssuredEndPointValidationImpl implements EndPointValidation {
                 .statusCode(HttpStatus.SC_OK).extract().response().getBody();
     }
 
-    public Member getMemberDetails(int memberId) {
-        String getMemberDetailsUrl = "/member?memberId=" + memberId;
+    public Member getMemberDetails(int employeeId) {
+        String getMemberDetailsUrl = "/member?employeeId=" + employeeId;
         return performGetRequest(getMemberDetailsUrl).as(Member.class);
     }
 
