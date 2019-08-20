@@ -6,6 +6,7 @@ import com.thoughtworks.gauge.Step;
 import com.thoughtworks.gauge.Table;
 import com.thoughtworks.gauge.datastore.DataStore;
 import com.thoughtworks.gauge.datastore.DataStoreFactory;
+import io.restassured.response.ResponseBody;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -17,16 +18,41 @@ import static org.junit.Assert.*;
 public class MembershipStepImplementation extends RestAssuredEndPointValidationImpl {
     DataStore scenarioStore;
 
+    @Step({"Given a registered card with id <cardId>", "Given an unregistered card with id <cardId>"})
+    public void givenAnEmployeeId(String cardId) {
+        scenarioStore.put("cardId", cardId);
+    }
+
+    @Step({"When the card is scanned"})
+    public void cardIsScanned() {
+        String cardId = (String) scenarioStore.get("cardId");
+        System.out.println("-----------cardId-------------");
+        System.out.println(cardId);
+        ResponseBody employee = getMemberDetails(cardId);
+        scenarioStore.put("employee", employee);
+    }
+
+    @Step("Then the employee is asked to register")
+    public void thenTheEmployeeIsAskedToRegister() {
+        ResponseBody responseBody = (ResponseBody) scenarioStore.get("employee");
+        System.out.println("-------------responseBody-------------");
+        System.out.println(responseBody);
+        System.out.println(responseBody.asString());
+        System.out.println(responseBody.asString().contains("register"));
+        assertTrue(responseBody.asString().contains("register"));
+    }
+
+    @Step("Given an employee id <1>")
+    public void givenAnEmployeeId(Object arg0) {
+        throw new UnsupportedOperationException("Provide custom implementation");
+    }
+
+
     @Step("Given the membership system is hosted at address <host> on port <port>")
     public void givenMembershipHostAndPort(String hostName, String port) {
         setHostName(hostName);
         setHostPort(port);
         scenarioStore = DataStoreFactory.getScenarioDataStore();
-    }
-
-    @Step("Given a card id <cardId>")
-    public void givenAnEmployeeId(String cardId) {
-        scenarioStore.put("cardId", cardId);
     }
 
     @Step("And the employee has a balance of <currentBalance>")
@@ -44,17 +70,15 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
 
     }
 
-    @Step("Then the correct employee details is retrieved")
+    @Step({"Then the correct employee details is retrieved"})
     public void employeeDetailsIsRetrieved() {
-        String cardId = (String) scenarioStore.get("cardId");
-        Employee employee = getMemberDetails(cardId);
-        System.out.println("Retrieved Employee:");
-        System.out.println(employee);
+        ResponseBody responseBody = (ResponseBody) scenarioStore.get("employee");
+        Employee employee = responseBody.as(Employee.class);
 
     }
 
-    @Step("Given a new employee with the following details: <employeeDetailsTable>")
-    public void employeeWithDetails(Table employeeDetailsTable){
+    @Step({"Given an unregistered employee with the following details: <employeeDetailsTable>", "Given a registered employee with the following details: <employeeDetailsTable>"})
+    public void employeeWithDetails(Table employeeDetailsTable) {
         List<String> employeeAttributes = employeeDetailsTable.getColumnValues("field");
         List<String> employeeAttributeValues = employeeDetailsTable.getColumnValues("fieldValue");
         Map<String, String> fieldMap = getFieldMap(employeeAttributes, employeeAttributeValues);
@@ -65,12 +89,22 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
         scenarioStore.put("email", fieldMap.get("email"));
         scenarioStore.put("mobileNo", fieldMap.get("mobileNo"));
         scenarioStore.put("pin", fieldMap.get("pin"));
-
-
-
     }
 
-    @Step("Then the new employee is successfully added to the system against their unique card number")
+    @Step("When the employee registers")
+    public void theEmployeeRegisters() {
+        String cardId = (String) scenarioStore.get("cardId");
+        String employeeId = (String) scenarioStore.get("employeeId");
+        String firstName = (String) scenarioStore.get("firstName");
+        String lastName = (String) scenarioStore.get("lastName");
+        String email = (String) scenarioStore.get("email");
+        String mobileNo = (String) scenarioStore.get("mobileNo");
+        String pin = (String) scenarioStore.get("pin");
+        Employee newEmployee = registerNewEmployee(cardId, employeeId, firstName, lastName, email, mobileNo, pin);
+        scenarioStore.put("employee", newEmployee);
+    }
+
+    @Step("Then the employee's details is successfully added to the system")
     public void addNewMemberToSystem() {
         String cardId = (String) scenarioStore.get("cardId");
         String employeeId = (String) scenarioStore.get("employeeId");
@@ -79,14 +113,14 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
         String email = (String) scenarioStore.get("email");
         String mobileNo = (String) scenarioStore.get("mobileNo");
         String pin = (String) scenarioStore.get("pin");
-        Employee newEmployee = createNewEmployee(cardId, employeeId, firstName, lastName, email, mobileNo, pin);
-        assertEquals(cardId, newEmployee.getCardId());
-        assertEquals(employeeId, newEmployee.getEmployeeId());
-        assertEquals(firstName, newEmployee.getFirstName());
-        assertEquals(lastName, newEmployee.getLastName());
-        assertEquals(email, newEmployee.getEmail());
-        assertEquals(mobileNo, newEmployee.getMobileNo());
-        assertEquals(pin, newEmployee.getPin());
+        Employee employee = (Employee) scenarioStore.get("employee");
+        assertEquals(cardId, employee.getCardId());
+        assertEquals(employeeId, employee.getEmployeeId());
+        assertEquals(firstName, employee.getFirstName());
+        assertEquals(lastName, employee.getLastName());
+        assertEquals(email, employee.getEmail());
+        assertEquals(mobileNo, employee.getMobileNo());
+        assertEquals(pin, employee.getPin());
     }
 
     private Map<String, String> getFieldMap(List<String> fieldList, List<String> fieldValuesList) {

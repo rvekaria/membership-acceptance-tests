@@ -2,25 +2,39 @@
 
 * Given the membership system is hosted at address "localhost" on port "8080"
 
+## Scan card
+* Given an unregistered card with id "12345678abcdefgh"
+* When the card is scanned
+* Then the employee is asked to register
+
 ## Register new employee
-* Given a new employee with the following details:
+* Given an unregistered employee with the following details:
+      | field       |      fieldValue        |
+      |cardId       |   12345678abcdefgh     |
+      |employeeId   |   4                    |
+      |firstName    |	New                  |
+      |lastName     |	Person               |
+      |email        | new.person@bf1HPC.com  |
+      |mobileNo     |	07123456789          |
+      |pin          |	1234                 |
+* When the employee registers
+* Then the employee's details is successfully added to the system
+
+## Retrieve employee information given card Id
+* Given a registered employee with the following details:
       | field       |      fieldValue        |
       |cardId       |   6bb6b4c2c28b11e9     |
-      |employeeId   |   4                    |
+      |employeeId   |   5                    |
       |firstName    |	John                 |
       |lastName     |	Nelson               |
       |email        | john.nelson@bf1HPC.com |
-      |mobileNo     |	07123456789          |
-      |pin          |	1234                 |
-
-* Then the new employee is successfully added to the system against their unique card number
-
-## Retrieve employee information given card Id
-* Given a card id "6bb6b4c2c28b11e9"
+      |mobileNo     |	07812693012          |
+      |pin          |	8471                 |
+* When the card is scanned
 * Then the correct employee details is retrieved
 
 ## Add cash to employee's balance
-* Given an employee id "1"
+* Given a registered card with id "6bb6b4c2c28b11e9"
 * And the employee has a balance of "5"
 * When the employee tops up by "3"
 * Then the balance is "8"
