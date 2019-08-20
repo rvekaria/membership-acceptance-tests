@@ -6,13 +6,16 @@ import com.thoughtworks.gauge.Step;
 import com.thoughtworks.gauge.Table;
 import com.thoughtworks.gauge.datastore.DataStore;
 import com.thoughtworks.gauge.datastore.DataStoreFactory;
+import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
+import org.apache.http.HttpStatus;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.*;
 
 public class MembershipStepImplementation extends RestAssuredEndPointValidationImpl {
@@ -23,29 +26,29 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
         scenarioStore.put("cardId", cardId);
     }
 
-    @Step({"When the card is scanned"})
+    @Step("When the card is scanned")
     public void cardIsScanned() {
         String cardId = (String) scenarioStore.get("cardId");
-        ResponseBody employee = getMemberDetails(cardId);
-        scenarioStore.put("employee", employee);
+        Response cardScanResponse = getMemberDetails(cardId);
+        scenarioStore.put("cardScanResponse", cardScanResponse);
     }
 
     @Step("Then the details are not found")
     public void thenTheEmployeeDetailsAreNotFound() {
-        ResponseBody responseBody = (ResponseBody) scenarioStore.get("employee");
-        assertTrue(responseBody.asString().contains("404"));
+        Response response = (Response) scenarioStore.get("cardScanResponse");
+        response.then().statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
     @Step("And the employee is asked to register")
     public void theEmployeeisAskedToRegister() {
-        ResponseBody responseBody = (ResponseBody) scenarioStore.get("employee");
-        assertTrue(responseBody.asString().contains("This card is not registered. Please register first to use the service"));
+        Response response = (Response) scenarioStore.get("cardScanResponse");
+        assertTrue(response.then().extract()
+                .response()
+                .getBody()
+                .asString()
+                .contains("This card is not registered. Please register first to use the service"));
     }
 
-    @Step("Given an employee id <1>")
-    public void givenAnEmployeeId(Object arg0) {
-        throw new UnsupportedOperationException("Provide custom implementation");
-    }
 
 
     @Step("Given the membership system is hosted at address <host> on port <port>")
@@ -55,24 +58,9 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
         scenarioStore = DataStoreFactory.getScenarioDataStore();
     }
 
-    @Step("And the employee has a balance of <currentBalance>")
-    public void andTheMemberHasABalanceOf(double currentBalance) {
-
-    }
-
-    @Step("When the employee tops up by <topUpAmount>")
-    public void whenTheMemberTopsUpBy(double topUpAmount) {
-
-    }
-
-    @Step("Then the balance is <totalBalance>")
-    public void thenTheBalanceIs(double totalBalance) {
-
-    }
-
     @Step("Then the correct employee details is retrieved")
     public void employeeDetailsIsRetrieved() {
-        ResponseBody responseBody = (ResponseBody) scenarioStore.get("employee");
+        ResponseBody responseBody = (ResponseBody) scenarioStore.get("cardScanResponse");
         Employee employee = responseBody.as(Employee.class);
 
     }
@@ -91,7 +79,7 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
         scenarioStore.put("mobileNo", fieldMap.get("mobileNo"));
         scenarioStore.put("pin", fieldMap.get("pin"));
 
-        Employee employee = registerEmployee(
+        Response registeredEmployee = registerEmployee(
                 fieldMap.get("cardId"),
                 fieldMap.get("employeeId"),
                 fieldMap.get("firstName"),
@@ -100,7 +88,7 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
                 fieldMap.get("mobileNo"),
                 fieldMap.get("pin"));
 
-        scenarioStore.put("employee", employee);
+        scenarioStore.put("registeredEmployeeResponse", registeredEmployee);
     }
 
     @Step("Given an unregistered employee with the following details: <employeeDetailsTable>")
@@ -127,9 +115,9 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
         String mobileNo = (String) scenarioStore.get("mobileNo");
         String pin = (String) scenarioStore.get("pin");
 
-        Employee newEmployee = registerEmployee(cardId, employeeId, firstName, lastName, email, mobileNo, pin);
+        Response registerEmployeeResponse = registerEmployee(cardId, employeeId, firstName, lastName, email, mobileNo, pin);
 
-        scenarioStore.put("employee", newEmployee);
+        scenarioStore.put("registerEmployeeResponse", registerEmployeeResponse);
     }
 
     @Step("Then the employee's details is successfully added to the system")
@@ -142,8 +130,10 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
         String mobileNo = (String) scenarioStore.get("mobileNo");
         String pin = (String) scenarioStore.get("pin");
 
-        Employee employee = (Employee) scenarioStore.get("employee");
+        Response response = (Response) scenarioStore.get("registerEmployeeResponse");
+        Employee employee = response.as(Employee.class);
 
+        response.then().statusCode(HttpStatus.SC_OK);
         assertEquals(cardId, employee.getCardId());
         assertEquals(employeeId, employee.getEmployeeId());
         assertEquals(firstName, employee.getFirstName());

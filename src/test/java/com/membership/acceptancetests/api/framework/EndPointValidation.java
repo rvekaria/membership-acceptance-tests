@@ -1,6 +1,5 @@
 package com.membership.acceptancetests.api.framework;
 
-import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
 
@@ -13,13 +12,13 @@ public interface EndPointValidation {
 
     void setHostPort(String hostPort);
 
-    ResponseBody performGetRequest(String requestUrl);
+    Response performGetRequest(String requestUrl);
 
-    ResponseBody performPutRequest(Object resource, String requestUrlWithParameters);
+    Response performPutRequest(Object resource, String requestUrlWithParameters);
 
-    ResponseBody performDeleteRequest(String requestUrlWithParameters);
+    Response performDeleteRequest(String requestUrlWithParameters);
 
-    ResponseBody performPostRequest(Object requestObject, String requestUrlWithParameters);
+    Response performPostRequest(Object requestObject, String requestUrlWithParameters);
 
 
 }
