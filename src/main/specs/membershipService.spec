@@ -34,9 +34,3 @@
 * When the card is scanned
 * Then the correct employee details is retrieved
 * And a welcome message is received
-
-## Add cash to employee's balance
-* Given a registered card with id "6bb6b4c2c28b11e9"
-* And the employee has a balance of "5"
-* When the employee tops up by "3"
-* Then the balance is "8"
