@@ -30,11 +30,16 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
         scenarioStore.put("employee", employee);
     }
 
-    @Step("Then the details are not found and the employee is asked to register")
-    public void thenTheEmployeeIsAskedToRegister() {
+    @Step("Then the details are not found")
+    public void thenTheEmployeeDetailsAreNotFound() {
+        ResponseBody responseBody = (ResponseBody) scenarioStore.get("employee");
+        assertTrue(responseBody.asString().contains("404"));
+    }
+
+    @Step("And the employee is asked to register")
+    public void theEmployeeisAskedToRegister() {
         ResponseBody responseBody = (ResponseBody) scenarioStore.get("employee");
         assertTrue(responseBody.asString().contains("This card is not registered. Please register first to use the service"));
-        assertTrue(responseBody.asString().contains("404"));
     }
 
     @Step("Given an employee id <1>")

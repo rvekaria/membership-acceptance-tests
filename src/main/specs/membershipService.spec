@@ -5,7 +5,8 @@
 ## Scan unregistered card
 * Given an unregistered card with id "12345678abcdefgh"
 * When the card is scanned
-* Then the details are not found and the employee is asked to register
+* Then the details are not found
+* And the employee is asked to register
 
 ## Register new employee
 * Given an unregistered employee with the following details:
@@ -20,7 +21,7 @@
 * When the employee registers
 * Then the employee's details is successfully added to the system
 
-## Retrieve employee information given card Id
+## Retrieve employee information given a registered card
 * Given a registered employee with the following details:
       | field       |      fieldValue        |
       |cardId       |   6bb6b4c2c28b11e9     |
@@ -32,6 +33,7 @@
       |pin          |	8471                 |
 * When the card is scanned
 * Then the correct employee details is retrieved
+* And a welcome message is received
 
 ## Add cash to employee's balance
 * Given a registered card with id "6bb6b4c2c28b11e9"
