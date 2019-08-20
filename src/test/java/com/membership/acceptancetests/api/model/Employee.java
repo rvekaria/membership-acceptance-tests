@@ -7,8 +7,8 @@ import java.util.Objects;
 
 
 public class Employee {
-    private String cardNumber;
-    private int employeeId;
+    private String cardId;
+    private String employeeId;
     private String firstName;
     private String lastName;
     private final String email;
@@ -17,15 +17,15 @@ public class Employee {
     private double balance;
 
     @JsonCreator
-    public Employee(@JsonProperty("cardNumber") String cardNumber,
-                    @JsonProperty("employeeId") int employeeId,
+    public Employee(@JsonProperty("cardId") String cardId,
+                    @JsonProperty("employeeId") String employeeId,
                     @JsonProperty("firstName") String firstName,
                     @JsonProperty("lastName") String lastName,
                     @JsonProperty("email") String email,
                     @JsonProperty("mobileNo") String mobileNo,
                     @JsonProperty("pin") String pin,
                     @JsonProperty("balance") double balance) {
-        this.cardNumber = cardNumber;
+        this.cardId = cardId;
         this.employeeId = employeeId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -35,11 +35,11 @@ public class Employee {
         this.balance = balance;
     }
 
-    public int getEmployeeId() {
+    public String getEmployeeId() {
         return employeeId;
     }
 
-    public void setEmployeeId(int employeeId) {
+    public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
     }
 
@@ -82,7 +82,7 @@ public class Employee {
     @Override
     public String toString() {
         return "Employee{" +
-                "cardNumber='" + cardNumber + '\'' +
+                "cardId='" + cardId + '\'' +
                 ", employeeId=" + employeeId +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
@@ -100,7 +100,7 @@ public class Employee {
         Employee employee = (Employee) o;
         return employeeId == employee.employeeId &&
                 Double.compare(employee.balance, balance) == 0 &&
-                Objects.equals(cardNumber, employee.cardNumber) &&
+                Objects.equals(cardId, employee.cardId) &&
                 Objects.equals(firstName, employee.firstName) &&
                 Objects.equals(lastName, employee.lastName) &&
                 Objects.equals(email, employee.email) &&
@@ -111,14 +111,14 @@ public class Employee {
     @Override
     public int hashCode() {
 
-        return Objects.hash(cardNumber, employeeId, firstName, lastName, email, mobileNo, pin, balance);
+        return Objects.hash(cardId, employeeId, firstName, lastName, email, mobileNo, pin, balance);
     }
 
-    public String getCardNumber() {
-        return cardNumber;
+    public String getCardId() {
+        return cardId;
     }
 
-    public void setCardNumber(String cardNumber) {
-        this.cardNumber = cardNumber;
+    public void setCardId(String cardId) {
+        this.cardId = cardId;
     }
 }

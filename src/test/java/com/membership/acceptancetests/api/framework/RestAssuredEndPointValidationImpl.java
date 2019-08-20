@@ -3,6 +3,7 @@ package com.membership.acceptancetests.api.framework;
 import com.membership.acceptancetests.api.model.Employee;
 import com.membership.acceptancetests.api.model.resource.RegisterNewEmployeeRequest;
 import io.restassured.RestAssured;
+import io.restassured.parsing.Parser;
 import io.restassured.response.ResponseBody;
 import org.apache.http.HttpStatus;
 
@@ -17,6 +18,7 @@ public class RestAssuredEndPointValidationImpl implements EndPointValidation {
     @Override
     public void setHostPort(String hostPort) {
         RestAssured.port = Integer.parseInt(hostPort);
+        RestAssured.defaultParser = Parser.JSON;
 
     }
 
@@ -53,12 +55,12 @@ public class RestAssuredEndPointValidationImpl implements EndPointValidation {
                 .statusCode(HttpStatus.SC_OK).extract().response().getBody();
     }
 
-    public Employee getMemberDetails(int employeeId) {
-        String getEmployeeDetailsUrl = "/employee?employeeId=" + employeeId;
+    public Employee getMemberDetails(String cardId) {
+        String getEmployeeDetailsUrl = "/employee?cardId=" + cardId;
         return performGetRequest(getEmployeeDetailsUrl).as(Employee.class);
     }
 
-    public Employee createNewEmployee(String cardNumber, int employeeId, String firstName, String lastName, String email, String mobileNo, String pin) {
+    public Employee createNewEmployee(String cardNumber, String employeeId, String firstName, String lastName, String email, String mobileNo, String pin) {
         String addNewEmployeeUrl = "/newEmployee";
         RegisterNewEmployeeRequest newEmployeeRequest = new RegisterNewEmployeeRequest(cardNumber, employeeId, firstName, lastName, email, mobileNo, pin);
         return performPostRequest(newEmployeeRequest, addNewEmployeeUrl).as(Employee.class);
