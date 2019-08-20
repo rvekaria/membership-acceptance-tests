@@ -2,10 +2,10 @@
 
 * Given the membership system is hosted at address "localhost" on port "8080"
 
-## Scan card
+## Scan unregistered card
 * Given an unregistered card with id "12345678abcdefgh"
 * When the card is scanned
-* Then the employee is asked to register
+* Then the details are not found and the employee is asked to register
 
 ## Register new employee
 * Given an unregistered employee with the following details:

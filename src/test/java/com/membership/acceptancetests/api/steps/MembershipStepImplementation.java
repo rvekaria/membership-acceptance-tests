@@ -23,23 +23,18 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
         scenarioStore.put("cardId", cardId);
     }
 
-    @Step({"When their card is scanned"})
+    @Step({"When the card is scanned"})
     public void cardIsScanned() {
         String cardId = (String) scenarioStore.get("cardId");
-        System.out.println("-----------cardId-------------");
-        System.out.println(cardId);
         ResponseBody employee = getMemberDetails(cardId);
         scenarioStore.put("employee", employee);
     }
 
-    @Step("Then the employee is asked to register")
+    @Step("Then the details are not found and the employee is asked to register")
     public void thenTheEmployeeIsAskedToRegister() {
         ResponseBody responseBody = (ResponseBody) scenarioStore.get("employee");
-        System.out.println("-------------responseBody-------------");
-        System.out.println(responseBody);
-        System.out.println(responseBody.asString());
-        System.out.println(responseBody.asString().contains("register"));
-        assertTrue(responseBody.asString().contains("This card is not registered!"));
+        assertTrue(responseBody.asString().contains("This card is not registered. Please register first to use the service"));
+        assertTrue(responseBody.asString().contains("404"));
     }
 
     @Step("Given an employee id <1>")
