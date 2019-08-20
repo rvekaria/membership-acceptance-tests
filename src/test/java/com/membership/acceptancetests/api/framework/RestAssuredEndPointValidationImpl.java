@@ -28,9 +28,7 @@ public class RestAssuredEndPointValidationImpl implements EndPointValidation {
                 .log().all().header("Content-Type", "application/json; charset=UTF-8")
                 .header("Accept", "application/json")
                 .when()
-                .request("GET", requestUrl)
-                .then()
-                .statusCode(HttpStatus.SC_OK).extract().response().getBody();
+                .request("GET", requestUrl).thenReturn();
     }
 
     @Override
@@ -60,8 +58,8 @@ public class RestAssuredEndPointValidationImpl implements EndPointValidation {
         return performGetRequest(getEmployeeDetailsUrl);
     }
 
-    public Employee registerNewEmployee(String cardNumber, String employeeId, String firstName, String lastName, String email, String mobileNo, String pin) {
-        String addNewEmployeeUrl = "/newEmployee";
+    public Employee registerEmployee(String cardNumber, String employeeId, String firstName, String lastName, String email, String mobileNo, String pin) {
+        String addNewEmployeeUrl = "/register";
         RegisterNewEmployeeRequest newEmployeeRequest = new RegisterNewEmployeeRequest(cardNumber, employeeId, firstName, lastName, email, mobileNo, pin);
         return performPostRequest(newEmployeeRequest, addNewEmployeeUrl).as(Employee.class);
 
