@@ -50,7 +50,6 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
     }
 
 
-
     @Step("Given the membership system is hosted at address <host> on port <port>")
     public void givenMembershipHostAndPort(String hostName, String port) {
         setHostName(hostName);
@@ -60,9 +59,28 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
 
     @Step("Then the correct employee details is retrieved")
     public void employeeDetailsIsRetrieved() {
-        ResponseBody responseBody = (ResponseBody) scenarioStore.get("cardScanResponse");
-        Employee employee = responseBody.as(Employee.class);
+        Response response = (Response) scenarioStore.get("cardScanResponse");
+        Employee employee = response.as(Employee.class);
 
+        assertEquals(scenarioStore.get("cardId"), employee.getCardId());
+        assertEquals(scenarioStore.get("employeeId"), employee.getEmployeeId());
+        assertEquals(scenarioStore.get("firstName"), employee.getFirstName());
+        assertEquals(scenarioStore.get("lastName"), employee.getLastName());
+        assertEquals(scenarioStore.get("email"), employee.getEmail());
+        assertEquals(scenarioStore.get("mobileNo"), employee.getMobileNo());
+        assertEquals(scenarioStore.get("pin"), employee.getPin());
+    }
+
+    @Step("And a welcome message is received")
+    public void andAWelcomeMessageIsReceived() {
+        Response response = (Response) scenarioStore.get("cardScanResponse");
+        Employee employee = response.as(Employee.class);
+        String employeeName = employee.getFirstName() + employee.getLastName();
+        assertTrue(response.then().extract()
+                .response()
+                .getBody()
+                .asString()
+                .contains("Welcome, " + employeeName));
     }
 
     @Step({"Given a registered employee with the following details: <employeeDetailsTable>"})
