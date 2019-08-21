@@ -75,7 +75,7 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
     public void andAWelcomeMessageIsReceived() {
         Response response = (Response) scenarioStore.get("cardScanResponse");
         Employee employee = response.as(Employee.class);
-        String employeeName = employee.getFirstName() + employee.getLastName();
+        String employeeName = employee.getFirstName() + " " + employee.getLastName();
         assertTrue(response.then().extract()
                 .response()
                 .getBody()
