@@ -2,6 +2,7 @@ package com.membership.acceptancetests.api.steps;
 
 import com.membership.acceptancetests.api.framework.RestAssuredEndPointValidationImpl;
 import com.membership.acceptancetests.api.model.Employee;
+import com.membership.acceptancetests.api.model.resource.EmployeeResource;
 import com.thoughtworks.gauge.Step;
 import com.thoughtworks.gauge.Table;
 import com.thoughtworks.gauge.datastore.DataStore;
@@ -60,7 +61,7 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
     @Step("Then the correct employee details is retrieved")
     public void employeeDetailsIsRetrieved() {
         Response response = (Response) scenarioStore.get("cardScanResponse");
-        Employee employee = response.as(Employee.class);
+        Employee employee = response.as(EmployeeResource.class).getEmployee();
 
         assertEquals(scenarioStore.get("cardId"), employee.getCardId());
         assertEquals(scenarioStore.get("employeeId"), employee.getEmployeeId());
@@ -74,7 +75,7 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
     @Step("And a welcome message is received")
     public void andAWelcomeMessageIsReceived() {
         Response response = (Response) scenarioStore.get("cardScanResponse");
-        Employee employee = response.as(Employee.class);
+        Employee employee = response.as(EmployeeResource.class).getEmployee();
         String employeeName = employee.getFirstName() + " " + employee.getLastName();
         assertTrue(response.then().extract()
                 .response()
