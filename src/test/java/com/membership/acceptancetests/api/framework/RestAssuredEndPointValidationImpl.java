@@ -1,6 +1,7 @@
 package com.membership.acceptancetests.api.framework;
 
 import com.membership.acceptancetests.api.model.resource.RegisterNewEmployeeRequest;
+import com.membership.acceptancetests.api.model.resource.TopUpRequest;
 import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
 import io.restassured.response.Response;
@@ -32,8 +33,14 @@ public class RestAssuredEndPointValidationImpl implements EndPointValidation {
     }
 
     @Override
-    public Response performPutRequest(Object resource, String requestUrlWithParameters) {
-        return null;
+    public Response performPutRequest(Object requestObject, String requestUrl) {
+        return given()
+                .log().all().header("Accept", "application/json")
+                .contentType("application/json")
+                .body(requestObject)
+                .when()
+                .request("PUT", requestUrl)
+                .thenReturn();
     }
 
     @Override
@@ -61,6 +68,13 @@ public class RestAssuredEndPointValidationImpl implements EndPointValidation {
         String addNewEmployeeUrl = "/register";
         RegisterNewEmployeeRequest newEmployeeRequest = new RegisterNewEmployeeRequest(cardNumber, employeeId, firstName, lastName, email, mobileNo, pin);
         return performPostRequest(newEmployeeRequest, addNewEmployeeUrl);
+
+    }
+
+    public Response topUp(String cardId, double topUpAmount) {
+        String topUpUrl = "/topUpBalance";
+        TopUpRequest topUpRequest = new TopUpRequest(cardId, topUpAmount);
+        return performPutRequest(topUpRequest, topUpUrl);
 
     }
 }
