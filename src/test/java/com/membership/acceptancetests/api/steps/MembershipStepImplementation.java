@@ -23,21 +23,23 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
     DataStore scenarioStore;
 
     @Step({"Given a registered card with id <cardId>", "Given an unregistered card with id <cardId>"})
-    public void givenAnEmployeeId(String cardId) {
+    public void givenACardId(String cardId) {
         scenarioStore.put("cardId", cardId);
+        scenarioStore.put("pin", "");
     }
 
     @Step("When the card is scanned")
     public void cardIsScanned() {
         String cardId = (String) scenarioStore.get("cardId");
-        Response cardScanResponse = getMemberDetails(cardId);
+        String pin = (String) scenarioStore.get("pin");
+        Response cardScanResponse = getMemberDetails(cardId, pin);
         scenarioStore.put("cardScanResponse", cardScanResponse);
     }
 
     @Step("Then the details are not found")
     public void thenTheEmployeeDetailsAreNotFound() {
         Response response = (Response) scenarioStore.get("cardScanResponse");
-        response.then().statusCode(HttpStatus.SC_NOT_FOUND);
+        response.then().statusCode(HttpStatus.SC_UNAUTHORIZED);
     }
 
     @Step("And the employee is asked to register")
@@ -61,22 +63,21 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
     @Step("Then the correct employee details is retrieved")
     public void employeeDetailsIsRetrieved() {
         Response response = (Response) scenarioStore.get("cardScanResponse");
-        Employee employee = response.as(EmployeeResource.class).getEmployee();
+        EmployeeResource employeeResource = response.as(EmployeeResource.class);
 
-        assertEquals(scenarioStore.get("cardId"), employee.getCardId());
-        assertEquals(scenarioStore.get("employeeId"), employee.getEmployeeId());
-        assertEquals(scenarioStore.get("firstName"), employee.getFirstName());
-        assertEquals(scenarioStore.get("lastName"), employee.getLastName());
-        assertEquals(scenarioStore.get("email"), employee.getEmail());
-        assertEquals(scenarioStore.get("mobileNo"), employee.getMobileNo());
-        assertEquals(scenarioStore.get("pin"), employee.getPin());
+        assertEquals(scenarioStore.get("cardId"), employeeResource.getCardId());
+        assertEquals(scenarioStore.get("employeeId"), employeeResource.getEmployeeId());
+        assertEquals(scenarioStore.get("firstName"), employeeResource.getFirstName());
+        assertEquals(scenarioStore.get("lastName"), employeeResource.getLastName());
+        assertEquals(scenarioStore.get("email"), employeeResource.getEmail());
+        assertEquals(scenarioStore.get("mobileNo"), employeeResource.getMobileNo());
     }
 
     @Step("And a welcome message is received")
     public void andAWelcomeMessageIsReceived() {
         Response response = (Response) scenarioStore.get("cardScanResponse");
-        Employee employee = response.as(EmployeeResource.class).getEmployee();
-        String employeeName = employee.getFirstName() + " " + employee.getLastName();
+        EmployeeResource employeeResource = response.as(EmployeeResource.class);
+        String employeeName = employeeResource.getFirstName() + " " + employeeResource.getLastName();
         assertTrue(response.then().extract()
                 .response()
                 .getBody()
@@ -148,18 +149,19 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
         String email = (String) scenarioStore.get("email");
         String mobileNo = (String) scenarioStore.get("mobileNo");
         String pin = (String) scenarioStore.get("pin");
+        String encodedPin1234 = "$2a$10$iO50fAsnyW6ACoiqalmrW.ctevgv5tGMBpnezUcxkJVvQ7Q4aE7hi";
 
         Response response = (Response) scenarioStore.get("registerEmployeeResponse");
-        Employee employee = response.as(Employee.class);
+        Employee employeeResponse = response.as(Employee.class);
 
         response.then().statusCode(HttpStatus.SC_OK);
-        assertEquals(cardId, employee.getCardId());
-        assertEquals(employeeId, employee.getEmployeeId());
-        assertEquals(firstName, employee.getFirstName());
-        assertEquals(lastName, employee.getLastName());
-        assertEquals(email, employee.getEmail());
-        assertEquals(mobileNo, employee.getMobileNo());
-        assertEquals(pin, employee.getPin());
+        assertEquals(cardId, employeeResponse.getCardId());
+        assertEquals(employeeId, employeeResponse.getEmployeeId());
+        assertEquals(firstName, employeeResponse.getFirstName());
+        assertEquals(lastName, employeeResponse.getLastName());
+        assertEquals(email, employeeResponse.getEmail());
+        assertEquals(mobileNo, employeeResponse.getMobileNo());
+        assertEquals(encodedPin1234, employeeResponse.getPin());
     }
 
     private Map<String, String> getFieldMap(List<String> fieldList, List<String> fieldValuesList) {

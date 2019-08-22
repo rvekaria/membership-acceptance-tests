@@ -12,7 +12,7 @@ public interface EndPointValidation {
 
     void setHostPort(String hostPort);
 
-    Response performGetRequest(String requestUrl);
+    Response performGetRequest(String requestUrl, String cardId, String pin);
 
     Response performPutRequest(Object resource, String requestUrlWithParameters);
 
