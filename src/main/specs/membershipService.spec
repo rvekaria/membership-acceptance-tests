@@ -64,3 +64,17 @@
       |balance      |   20.00                |
 * When they buy food for "7.00"
 * Then their balance is "13.00"
+
+## Employee receives error message when they do not have enough money
+* Given a registered employee with the following details:
+      | field       |      fieldValue        |
+      |cardId       |   6bb6b4c2c28b11e9     |
+      |employeeId   |   5                    |
+      |firstName    |	John                 |
+      |lastName     |	Nelson               |
+      |email        | john.nelson@bf1HPC.com |
+      |mobileNo     |	07812693012          |
+      |pin          |	8471                 |
+      |balance      |   5.00                |
+* When they buy food for "12.00"
+* Then they receive an error message asking them to top up

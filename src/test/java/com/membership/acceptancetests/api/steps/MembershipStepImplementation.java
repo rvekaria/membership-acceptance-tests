@@ -137,6 +137,16 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
         assertEquals(finalBalance, employeeResource.getEmployee().getBalance(), 0);
     }
 
+    @Step("Then they receive an error message asking them to top up")
+    public void thenReceiveErrorToTopUp(){
+        Response response = (Response) scenarioStore.get("topUp/buyFoodResponse");
+        assertTrue(response.then().extract()
+                .response()
+                .getBody()
+                .asString()
+                .contains("You have insufficient funds to carry out this purchase. Please top up and try again"));
+    }
+
     @Step("Given an unregistered employee with the following details: <employeeDetailsTable>")
     public void employeeWithDetails(Table employeeDetailsTable) {
         List<String> employeeAttributes = employeeDetailsTable.getColumnValues("field");
