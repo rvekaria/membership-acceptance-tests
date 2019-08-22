@@ -1,11 +1,10 @@
 package com.membership.acceptancetests.api.framework;
 
+import com.membership.acceptancetests.api.model.resource.ChangeBalanceRequest;
 import com.membership.acceptancetests.api.model.resource.RegisterNewEmployeeRequest;
-import com.membership.acceptancetests.api.model.resource.TopUpRequest;
 import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
 import io.restassured.response.Response;
-import io.restassured.response.ResponseBody;
 
 import static io.restassured.RestAssured.given;
 
@@ -77,8 +76,14 @@ public class RestAssuredEndPointValidationImpl implements EndPointValidation {
 
     public Response topUp(String cardId, double topUpAmount) {
         String topUpUrl = "/topUpBalance";
-        TopUpRequest topUpRequest = new TopUpRequest(cardId, topUpAmount);
-        return performPutRequest(topUpRequest, topUpUrl);
+        ChangeBalanceRequest changeBalanceRequest = new ChangeBalanceRequest(cardId, topUpAmount);
+        return performPutRequest(changeBalanceRequest, topUpUrl);
 
+    }
+
+    public Response buyFood(String cardId, double foodPrice) {
+        String buyFoodUrl = "/buy";
+        ChangeBalanceRequest changeBalanceRequest = new ChangeBalanceRequest(cardId, foodPrice);
+        return performPutRequest(changeBalanceRequest, buyFoodUrl);
     }
 }

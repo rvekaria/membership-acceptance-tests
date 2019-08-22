@@ -118,12 +118,20 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
     public void whenTheyTopUpBy(double topUpAmount){
         String cardId = (String) scenarioStore.get("cardId");
         Response topUpResponse = topUp(cardId, topUpAmount);
-        scenarioStore.put("topUpResponse", topUpResponse);
+        scenarioStore.put("topUp/buyFoodResponse", topUpResponse);
+    }
+
+    @Step("When they buy food for <foodPrice>")
+    public void whenTheyBuyFoodFor(double foodPrice){
+        String cardId = (String) scenarioStore.get("cardId");
+        Response buyFoodResponse = buyFood(cardId, foodPrice);
+        scenarioStore.put("topUp/buyFoodResponse", buyFoodResponse);
+
     }
 
     @Step("Then their balance is <finalBalance>")
     public void thenTheirBalanceIs(double finalBalance){
-        Response response = (Response) scenarioStore.get("topUpResponse");
+        Response response = (Response) scenarioStore.get("topUp/buyFoodResponse");
         EmployeeResource employeeResource = response.as(EmployeeResource.class);
         response.then().statusCode(HttpStatus.SC_OK);
         assertEquals(finalBalance, employeeResource.getEmployee().getBalance(), 0);
