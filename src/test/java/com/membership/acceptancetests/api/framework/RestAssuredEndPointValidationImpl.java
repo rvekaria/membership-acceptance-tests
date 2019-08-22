@@ -1,11 +1,10 @@
 package com.membership.acceptancetests.api.framework;
 
+import com.membership.acceptancetests.api.model.resource.ChangeBalanceRequest;
 import com.membership.acceptancetests.api.model.resource.RegisterNewEmployeeRequest;
-import com.membership.acceptancetests.api.model.resource.TopUpRequest;
 import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
 import io.restassured.response.Response;
-import io.restassured.response.ResponseBody;
 
 import static io.restassured.RestAssured.given;
 
@@ -64,17 +63,27 @@ public class RestAssuredEndPointValidationImpl implements EndPointValidation {
         return performGetRequest(getEmployeeDetailsUrl);
     }
 
-    public Response registerEmployee(String cardNumber, String employeeId, String firstName, String lastName, String email, String mobileNo, String pin) {
-        String addNewEmployeeUrl = "/register";
-        RegisterNewEmployeeRequest newEmployeeRequest = new RegisterNewEmployeeRequest(cardNumber, employeeId, firstName, lastName, email, mobileNo, pin);
-        return performPostRequest(newEmployeeRequest, addNewEmployeeUrl);
+    public Response registerEmployee(String cardId, String employeeId, String firstName, String lastName, String email, String mobileNo, String pin) {
+        return registerEmployee(cardId, employeeId, firstName, lastName, email, mobileNo, pin, "0");
+    }
 
+    public Response registerEmployee(String cardId, String employeeId, String firstName, String lastName, String email, String mobileNo, String pin, String balance) {
+        String addNewEmployeeUrl = "/register";
+        RegisterNewEmployeeRequest newEmployeeRequest = new RegisterNewEmployeeRequest(cardId, employeeId, firstName, lastName, email, mobileNo, pin, Double.parseDouble(balance));
+        System.out.println(newEmployeeRequest);
+        return performPostRequest(newEmployeeRequest, addNewEmployeeUrl);
     }
 
     public Response topUp(String cardId, double topUpAmount) {
         String topUpUrl = "/topUpBalance";
-        TopUpRequest topUpRequest = new TopUpRequest(cardId, topUpAmount);
-        return performPutRequest(topUpRequest, topUpUrl);
+        ChangeBalanceRequest changeBalanceRequest = new ChangeBalanceRequest(cardId, topUpAmount);
+        return performPutRequest(changeBalanceRequest, topUpUrl);
 
+    }
+
+    public Response buyFood(String cardId, double foodPrice) {
+        String buyFoodUrl = "/buy";
+        ChangeBalanceRequest changeBalanceRequest = new ChangeBalanceRequest(cardId, foodPrice);
+        return performPutRequest(changeBalanceRequest, buyFoodUrl);
     }
 }
