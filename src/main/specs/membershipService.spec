@@ -18,6 +18,7 @@
       |email        | new.person@bf1HPC.com  |
       |mobileNo     |	07123456789          |
       |pin          |	1234                 |
+      |balance      |   0                    |
 * When the employee registers
 * Then the employee's details is successfully added to the system
 
@@ -31,6 +32,7 @@
       |email        | john.nelson@bf1HPC.com |
       |mobileNo     |	07812693012          |
       |pin          |	8471                 |
+      |balance      |   0                    |
 * When the card is scanned
 * Then the correct employee details is retrieved
 * And a welcome message is received
@@ -48,3 +50,17 @@
       |balance      |   3.45                 |
 * When they top up by "6.00"
 * Then their balance is "9.45"
+
+## Employee's balance decreases when they buy food
+* Given a registered employee with the following details:
+      | field       |      fieldValue        |
+      |cardId       |   6bb6b4c2c28b11e9     |
+      |employeeId   |   5                    |
+      |firstName    |	John                 |
+      |lastName     |	Nelson               |
+      |email        | john.nelson@bf1HPC.com |
+      |mobileNo     |	07812693012          |
+      |pin          |	8471                 |
+      |balance      |   20.00                |
+* When they buy food for "7.00"
+* Then their balance is "13.00"

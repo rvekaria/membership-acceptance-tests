@@ -64,11 +64,15 @@ public class RestAssuredEndPointValidationImpl implements EndPointValidation {
         return performGetRequest(getEmployeeDetailsUrl);
     }
 
-    public Response registerEmployee(String cardNumber, String employeeId, String firstName, String lastName, String email, String mobileNo, String pin) {
-        String addNewEmployeeUrl = "/register";
-        RegisterNewEmployeeRequest newEmployeeRequest = new RegisterNewEmployeeRequest(cardNumber, employeeId, firstName, lastName, email, mobileNo, pin);
-        return performPostRequest(newEmployeeRequest, addNewEmployeeUrl);
+    public Response registerEmployee(String cardId, String employeeId, String firstName, String lastName, String email, String mobileNo, String pin) {
+        return registerEmployee(cardId, employeeId, firstName, lastName, email, mobileNo, pin, "0");
+    }
 
+    public Response registerEmployee(String cardId, String employeeId, String firstName, String lastName, String email, String mobileNo, String pin, String balance) {
+        String addNewEmployeeUrl = "/register";
+        RegisterNewEmployeeRequest newEmployeeRequest = new RegisterNewEmployeeRequest(cardId, employeeId, firstName, lastName, email, mobileNo, pin, Double.parseDouble(balance));
+        System.out.println(newEmployeeRequest);
+        return performPostRequest(newEmployeeRequest, addNewEmployeeUrl);
     }
 
     public Response topUp(String cardId, double topUpAmount) {

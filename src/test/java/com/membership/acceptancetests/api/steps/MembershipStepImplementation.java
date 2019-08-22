@@ -106,9 +106,27 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
                 fieldMap.get("lastName"),
                 fieldMap.get("email"),
                 fieldMap.get("mobileNo"),
-                fieldMap.get("pin"));
+                fieldMap.get("pin"),
+                fieldMap.get("balance")
+        );
 
+        System.out.println(registeredEmployee);
         scenarioStore.put("registeredEmployeeResponse", registeredEmployee);
+    }
+
+    @Step("When they top up by <topUpAmount>")
+    public void whenTheyTopUpBy(double topUpAmount){
+        String cardId = (String) scenarioStore.get("cardId");
+        Response topUpResponse = topUp(cardId, topUpAmount);
+        scenarioStore.put("topUpResponse", topUpResponse);
+    }
+
+    @Step("Then their balance is <finalBalance>")
+    public void thenTheirBalanceIs(double finalBalance){
+        Response response = (Response) scenarioStore.get("topUpResponse");
+        EmployeeResource employeeResource = response.as(EmployeeResource.class);
+        response.then().statusCode(HttpStatus.SC_OK);
+        assertEquals(finalBalance, employeeResource.getEmployee().getBalance(), 0);
     }
 
     @Step("Given an unregistered employee with the following details: <employeeDetailsTable>")
@@ -161,21 +179,6 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
         assertEquals(email, employee.getEmail());
         assertEquals(mobileNo, employee.getMobileNo());
         assertEquals(pin, employee.getPin());
-    }
-
-    @Step("When they top up by <topUpAmount>")
-    public void whenTheyTopUpBy(double topUpAmount){
-        String cardId = (String) scenarioStore.get("cardId");
-        Response topUpResponse = topUp(cardId, topUpAmount);
-        scenarioStore.put("topUpResponse", topUpResponse);
-    }
-
-    @Step("Then their balance is <finalBalance>")
-    public void thenTheirBalanceIs(double finalBalance){
-        Response response = (Response) scenarioStore.get("topUpResponse");
-        EmployeeResource employee = response.as(EmployeeResource.class);
-        response.then().statusCode(HttpStatus.SC_OK);
-        assertEquals(finalBalance, Double.parseDouble((String) scenarioStore.get("balance")) + employee.getEmployee().getBalance(), 0);
     }
 
 
