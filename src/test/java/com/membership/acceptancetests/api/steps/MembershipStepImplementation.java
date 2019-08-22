@@ -97,6 +97,7 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
         scenarioStore.put("email", fieldMap.get("email"));
         scenarioStore.put("mobileNo", fieldMap.get("mobileNo"));
         scenarioStore.put("pin", fieldMap.get("pin"));
+        scenarioStore.put("balance", fieldMap.get("balance"));
 
         Response registeredEmployee = registerEmployee(
                 fieldMap.get("cardId"),
@@ -161,6 +162,22 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
         assertEquals(mobileNo, employee.getMobileNo());
         assertEquals(pin, employee.getPin());
     }
+
+    @Step("When they top up by <topUpAmount>")
+    public void whenTheyTopUpBy(double topUpAmount){
+        String cardId = (String) scenarioStore.get("cardId");
+        Response topUpResponse = topUp(cardId, topUpAmount);
+        scenarioStore.put("topUpResponse", topUpResponse);
+    }
+
+    @Step("Then their balance is <finalBalance>")
+    public void thenTheirBalanceIs(double finalBalance){
+        Response response = (Response) scenarioStore.get("topUpResponse");
+        EmployeeResource employee = response.as(EmployeeResource.class);
+        response.then().statusCode(HttpStatus.SC_OK);
+        assertEquals(finalBalance, Double.parseDouble((String) scenarioStore.get("balance")) + employee.getEmployee().getBalance(), 0);
+    }
+
 
     private Map<String, String> getFieldMap(List<String> fieldList, List<String> fieldValuesList) {
         Map<String, String> fieldMap = new HashMap<String, String>();
