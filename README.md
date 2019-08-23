@@ -1,17 +1,18 @@
-## Gauge with Spring
+## Membership Acceptance Tests
 
-[![Build Status](https://travis-ci.org/getgauge-examples/ioc-spring.svg?branch=master)](https://travis-ci.org/getgauge-examples/ioc-spring)
+This project contains end to end test for the API endpoints of the membership system project.
+You can clone the membership system project using:  
+`git clone https://github.com/rvekaria/membership-system.git`
 
-This is a sample Gauge project demonstrating the use of Spring IOC framework with [Gauge](http://getgauge.io).
-
-## Usage
-
+## Running the tests
+The following needs to be installed in order to tun the gauge tests:  
 * [Install Gauge](http://getgauge.io/get-started/index.html)
 * Install Gauge java plugin `gauge install java`
-* Install Maven
-* Clone this repository
-* Run `mvn test`
 
-This executes the Gauge specs. Reports can be found under `reports` directory after execution.
+The membership system needs to be running against which the tests will run. In the membership system project, run:
+* `mvn clean install`
+* `java -jar target/membership-system-0.0.1-SNAPSHOT.jar` 
 
-Refer [Gauge documentation](https://docs.gauge.org/latest/index.html) for more.
+Ensure the mongo database is running: `mongod`
+
+Run the acceptance tests using `mvn clean install`
