@@ -8,7 +8,6 @@ import com.thoughtworks.gauge.Table;
 import com.thoughtworks.gauge.datastore.DataStore;
 import com.thoughtworks.gauge.datastore.DataStoreFactory;
 import io.restassured.response.Response;
-import io.restassured.response.ResponseBody;
 import org.apache.http.HttpStatus;
 
 import java.util.HashMap;
@@ -16,8 +15,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.contains;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class MembershipStepImplementation extends RestAssuredEndPointValidationImpl {
     DataStore scenarioStore;
@@ -69,7 +68,6 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
         assertEquals(scenarioStore.get("lastName"), employee.getLastName());
         assertEquals(scenarioStore.get("email"), employee.getEmail());
         assertEquals(scenarioStore.get("mobileNo"), employee.getMobileNo());
-        assertEquals(scenarioStore.get("pin"), employee.getPin());
     }
 
     @Step("And a welcome message is received")
@@ -187,7 +185,8 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
         String pin = (String) scenarioStore.get("pin");
 
         Response response = (Response) scenarioStore.get("registerEmployeeResponse");
-        Employee employee = response.as(Employee.class);
+        EmployeeResource employeeResource = response.as(EmployeeResource.class);
+        Employee employee = employeeResource.getEmployee();
 
         response.then().statusCode(HttpStatus.SC_OK);
         assertEquals(cardId, employee.getCardId());
@@ -196,7 +195,6 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
         assertEquals(lastName, employee.getLastName());
         assertEquals(email, employee.getEmail());
         assertEquals(mobileNo, employee.getMobileNo());
-        assertEquals(pin, employee.getPin());
     }
 
 

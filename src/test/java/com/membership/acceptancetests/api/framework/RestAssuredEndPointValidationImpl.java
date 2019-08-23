@@ -26,6 +26,7 @@ public class RestAssuredEndPointValidationImpl implements EndPointValidation {
         return given()
                 .log().all().header("Content-Type", "application/json; charset=UTF-8")
                 .header("Accept", "application/json")
+                .auth().preemptive().basic("test", "0000")
                 .when()
                 .request("GET", requestUrl)
                 .thenReturn();
@@ -36,6 +37,7 @@ public class RestAssuredEndPointValidationImpl implements EndPointValidation {
         return given()
                 .log().all().header("Accept", "application/json")
                 .contentType("application/json")
+                .auth().preemptive().basic("test", "0000")
                 .body(requestObject)
                 .when()
                 .request("PUT", requestUrl)
