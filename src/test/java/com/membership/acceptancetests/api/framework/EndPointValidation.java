@@ -1,7 +1,6 @@
 package com.membership.acceptancetests.api.framework;
 
 import io.restassured.response.Response;
-import io.restassured.response.ResponseBody;
 
 public interface EndPointValidation {
 
@@ -18,7 +17,7 @@ public interface EndPointValidation {
 
     Response performDeleteRequest(String requestUrlWithParameters);
 
-    Response performPostRequest(Object requestObject, String requestUrlWithParameters);
+    Response performPostRequestUnauthenticated(Object requestObject, String requestUrlWithParameters);
 
-
+    Response performPostRequestAuthenticated(String username, String pin, String requestUrl);
 }

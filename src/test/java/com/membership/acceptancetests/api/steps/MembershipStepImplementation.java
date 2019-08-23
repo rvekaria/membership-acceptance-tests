@@ -21,27 +21,45 @@ import static org.junit.Assert.assertTrue;
 public class MembershipStepImplementation extends RestAssuredEndPointValidationImpl {
     DataStore scenarioStore;
 
-    @Step({"Given a registered card with id <cardId>", "Given an unregistered card with id <cardId>"})
-    public void givenAnEmployeeId(String cardId) {
+    @Step({"Given a registered card with id <cardId>",
+            "Given an unregistered card with id <cardId>"})
+    public void givenACardId(String cardId) {
         scenarioStore.put("cardId", cardId);
     }
 
-    @Step("When the card is scanned")
+    @Step({"When the user logs in", "And taps again"})
     public void cardIsScanned() {
         String cardId = (String) scenarioStore.get("cardId");
-        Response cardScanResponse = getMemberDetails(cardId);
+        String pin = (String) scenarioStore.get("pin");
+        Response cardScanResponse = login(cardId, pin == null ? "" : pin);
         scenarioStore.put("cardScanResponse", cardScanResponse);
+    }
+
+    @Step("Then they receive a <logoutMessage> message")
+    public void thenTheyReceiveAMessage(String logoutMessage){
+        Response response = (Response) scenarioStore.get("cardScanResponse");
+        System.out.println(response);
+        EmployeeResource employeeResource = response.as(EmployeeResource.class);
+        System.out.println(employeeResource.getResponseMessage());
+        assertTrue(response.then().extract()
+                .response()
+                .getBody()
+                .asString()
+                .contains(logoutMessage));
     }
 
     @Step("Then the details are not found")
     public void thenTheEmployeeDetailsAreNotFound() {
         Response response = (Response) scenarioStore.get("cardScanResponse");
-        response.then().statusCode(HttpStatus.SC_NOT_FOUND);
+        response.then().statusCode(HttpStatus.SC_UNAUTHORIZED);
     }
 
     @Step("And the employee is asked to register")
     public void theEmployeeisAskedToRegister() {
         Response response = (Response) scenarioStore.get("cardScanResponse");
+        System.out.println(response);
+        EmployeeResource employeeResource = response.as(EmployeeResource.class);
+        System.out.println(employeeResource.getResponseMessage());
         assertTrue(response.then().extract()
                 .response()
                 .getBody()
@@ -113,14 +131,14 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
     }
 
     @Step("When they top up by <topUpAmount>")
-    public void whenTheyTopUpBy(double topUpAmount){
+    public void whenTheyTopUpBy(double topUpAmount) {
         String cardId = (String) scenarioStore.get("cardId");
         Response topUpResponse = topUp(cardId, topUpAmount);
         scenarioStore.put("topUp/buyFoodResponse", topUpResponse);
     }
 
     @Step("When they buy food for <foodPrice>")
-    public void whenTheyBuyFoodFor(double foodPrice){
+    public void whenTheyBuyFoodFor(double foodPrice) {
         String cardId = (String) scenarioStore.get("cardId");
         Response buyFoodResponse = buyFood(cardId, foodPrice);
         scenarioStore.put("topUp/buyFoodResponse", buyFoodResponse);
@@ -128,7 +146,7 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
     }
 
     @Step("Then their balance is <finalBalance>")
-    public void thenTheirBalanceIs(double finalBalance){
+    public void thenTheirBalanceIs(double finalBalance) {
         Response response = (Response) scenarioStore.get("topUp/buyFoodResponse");
         EmployeeResource employeeResource = response.as(EmployeeResource.class);
         response.then().statusCode(HttpStatus.SC_OK);
@@ -136,7 +154,7 @@ public class MembershipStepImplementation extends RestAssuredEndPointValidationI
     }
 
     @Step("Then they receive an error message asking them to top up")
-    public void thenReceiveErrorToTopUp(){
+    public void thenReceiveErrorToTopUp() {
         Response response = (Response) scenarioStore.get("topUp/buyFoodResponse");
         assertTrue(response.then().extract()
                 .response()

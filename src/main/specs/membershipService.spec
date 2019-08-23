@@ -4,7 +4,7 @@
 
 ## Scan unregistered card
 * Given an unregistered card with id "12345678abcdefgh"
-* When the card is scanned
+* When the user logs in
 * Then the details are not found
 * And the employee is asked to register
 
@@ -33,7 +33,7 @@
       |mobileNo     |	07812693012          |
       |pin          |	8471                 |
       |balance      |   0                    |
-* When the card is scanned
+* When the user logs in
 * Then the correct employee details is retrieved
 * And a welcome message is received
 
@@ -78,3 +78,18 @@
       |balance      |   5.00                |
 * When they buy food for "12.00"
 * Then they receive an error message asking them to top up
+
+## Employee logs out upon scanning twice
+* Given a registered employee with the following details:
+        | field       |      fieldValue        |
+        |cardId       |   6bb6b4c2c28b11e9     |
+        |employeeId   |   5                    |
+        |firstName    |	John                   |
+        |lastName     |	Nelson                 |
+        |email        | john.nelson@bf1HPC.com |
+        |mobileNo     |	07812693012            |
+        |pin          |	8471                   |
+        |balance      |   0                    |
+* When the user logs in
+* And taps again
+* Then they receive a "Goodbye" message

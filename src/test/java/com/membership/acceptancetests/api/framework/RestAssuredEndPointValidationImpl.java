@@ -50,7 +50,7 @@ public class RestAssuredEndPointValidationImpl implements EndPointValidation {
     }
 
     @Override
-    public Response performPostRequest(Object requestObject, String requestUrl) {
+    public Response performPostRequestUnauthenticated(Object requestObject, String requestUrl) {
         return given()
                 .log().all().header("Accept", "application/json")
                 .contentType("application/json")
@@ -60,9 +60,20 @@ public class RestAssuredEndPointValidationImpl implements EndPointValidation {
                 .thenReturn();
     }
 
-    public Response getMemberDetails(String cardId) {
-        String getEmployeeDetailsUrl = "/employee?cardId=" + cardId;
-        return performGetRequest(getEmployeeDetailsUrl);
+    @Override
+    public Response performPostRequestAuthenticated(String username, String password, String requestUrl) {
+        return given()
+                .log().all().header("Accept", "application/json")
+                .contentType("application/json")
+                .auth().preemptive().basic(username, password)
+                .when()
+                .request("POST", requestUrl)
+                .thenReturn();
+    }
+
+    public Response login(String cardId, String pin) {
+        String loginUrl = "/login";
+        return performPostRequestAuthenticated(cardId, pin, loginUrl);
     }
 
     public Response registerEmployee(String cardId, String employeeId, String firstName, String lastName, String email, String mobileNo, String pin) {
@@ -73,7 +84,7 @@ public class RestAssuredEndPointValidationImpl implements EndPointValidation {
         String addNewEmployeeUrl = "/register";
         RegisterNewEmployeeRequest newEmployeeRequest = new RegisterNewEmployeeRequest(cardId, employeeId, firstName, lastName, email, mobileNo, pin, Double.parseDouble(balance));
         System.out.println(newEmployeeRequest);
-        return performPostRequest(newEmployeeRequest, addNewEmployeeUrl);
+        return performPostRequestUnauthenticated(newEmployeeRequest, addNewEmployeeUrl);
     }
 
     public Response topUp(String cardId, double topUpAmount) {
